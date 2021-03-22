@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": [
+      "./node_modules/@lingui/macro/global",
+    ],
+    "paths": {
+      "components/*": [
+        "./src/app/components/*"
+      ],
+      "hooks/*": [
+        "./src/app/hooks/*"
+      ],
+      "helpers/*": [
+        "./src/helpers/*"
+      ]
+    }
+  },
+}

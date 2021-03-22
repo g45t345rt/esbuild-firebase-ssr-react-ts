@@ -1,0 +1,62 @@
+{
+  "name": "esbuild-firebase-ssr-react-ts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./src",
+    "compile": "lingui compile",
+    "extract": "lingui extract",
+    "dev-locale": "lingui compile --watch",
+    "dev": "npm run lint && node bundle.js",
+    "build": "rimraf -rf ./dist && npm run lint && node bundle.js --env production",
+    "serve": "firebase serve",
+    "deploy": "npm run build && firebase deploy"
+  },
+  "engines": {
+    "node": "14"
+  },
+  "author": "g45t345rt",
+  "license": "ISC",
+  "dependencies": {
+    "@lingui/core": "^3.7.2",
+    "@lingui/react": "^3.7.2",
+    "accept-language-parser": "^1.5.0",
+    "dayjs": "^1.10.4",
+    "fastify": "^3.12.0",
+    "fastify-cookie": "^5.1.0",
+    "fastify-cors": "^5.2.0",
+    "fastify-formbody": "^5.0.0",
+    "fastify-multipart": "^4.0.0",
+    "firebase": "^8.3.1",
+    "firebase-admin": "^9.5.0",
+    "firebase-functions": "^3.13.2",
+    "js-cookie": "^2.2.1",
+    "make-plural": "^6.2.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@lingui/cli": "^3.7.2",
+    "@types/js-cookie": "^2.2.6",
+    "@types/less": "^3.0.2",
+    "@types/react-dom": "^17.0.2",
+    "@types/react-helmet": "^6.1.0",
+    "@types/react-router-dom": "^5.1.7",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "autoprefixer": "^10.2.5",
+    "chokidar": "^3.5.1",
+    "copyfiles": "^2.4.1",
+    "esbuild": "^0.8.46",
+    "esbuild-plugin-alias": "^0.1.2",
+    "esbuild-plugin-postcss2": "^0.0.6",
+    "eslint": "^7.22.0",
+    "less": "^4.1.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.3",
+    "yargs": "^16.2.0"
+  }
+}

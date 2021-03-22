@@ -1,0 +1,1 @@
+/*eslint-disable*/export const messages={"This is home":"Ceci est l'accueil"};
