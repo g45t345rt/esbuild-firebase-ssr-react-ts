@@ -5,10 +5,9 @@ const aliasPlugin = require('esbuild-plugin-alias')
 const autoprefixer = require('autoprefixer')
 const postCssPlugin = require('esbuild-plugin-postcss2').default
 const EventEmitter = require('events')
-const fileLastModifiedPlugin = require('./esbuild-plugin-fileLastModified')
+const fileLastModifiedPlugin = require('esbuild-plugin-filelastmodified').default
 const chokidar = require('chokidar')
 const copyfiles = require('copyfiles')
-
 const http = require('http')
 
 const bundleEmitter = new EventEmitter()
