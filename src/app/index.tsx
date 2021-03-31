@@ -10,7 +10,7 @@ import { AppProvider } from 'hooks/useApp'
 import useActivateLanguage from 'hooks/useActivateLanguage'
 import PreventTransition from 'components/PreventTransition'
 
-import './index.less'
+import styles from './index.module.less'
 
 // PAGES
 import Home from './pages/home'
@@ -33,6 +33,9 @@ export default (): JSX.Element => {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#ffffff" />
         </Helmet>
+        <div className={styles.container}>
+          This is a container
+        </div>
         <Switch>
           <Route path="/" exact component={Home} />
         </Switch>

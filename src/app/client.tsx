@@ -23,11 +23,11 @@ if (process.env.NODE_ENV === 'production') {
   ReactDOM.hydrate(client, rootElement) // perserve markup and only attach event handlers (performant first-load)
 } else {
   ReactDOM.render(client, rootElement)
+
+  const evtSource = new EventSource('http://localhost:5645')
+
+  evtSource.addEventListener('refresh', () => {
+    console.log('refresh')
+    window.location.reload()
+  })
 }
-
-const evtSource = new EventSource('http://localhost:5645')
-
-evtSource.addEventListener('refresh', () => {
-  console.log('refresh')
-  window.location.reload()
-})

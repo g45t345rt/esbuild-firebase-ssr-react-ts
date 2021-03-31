@@ -36,11 +36,12 @@ const baseConfig = {
   define: {
     ['process.env.NODE_ENV']: `"${env}"`
   },
-  bundle: true,
-  sourcemap: !isProduction && 'external',
   incremental: !isProduction,
-  logLevel: 'error',
+  bundle: true,
+  // not using watch onRebuild because it's actually polling every 2 seconds (I only want to website to refresh on file change)
+  sourcemap: !isProduction && 'external',
   minify: isProduction,
+  metafile: true,
   plugins: [
     fileLastModifiedPlugin(),
     postCssPlugin({
@@ -73,7 +74,8 @@ const buildClient = () => esbuild.build({
   entryPoints: ['./src/app/client.tsx'],
 })
 
-const build = () => Promise.all([buildClient(), buildServer()])
+
+const build = () => Promise.all([buildServer(), buildClient()])
 copyfiles(['package.json', './dist/server'], {}, () => console.log('package.json copied to dist/server'))
 copyfiles(['./src/static/**/*', './dist/client'], { up: 1 }, () => console.log('/static copied to dist/client'))
 
