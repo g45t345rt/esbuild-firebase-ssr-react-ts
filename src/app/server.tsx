@@ -2,22 +2,22 @@ import React from 'react'
 import { StaticRouter } from 'react-router-dom'
 
 import App from './index'
-import { ServerDataProvider, ServerDataContext } from 'hooks/useServerData'
+import { ServerFuncProvider, ServerFuncContext } from 'hooks/useServerFunc'
 import { ServerContext, ServerProvider } from 'hooks/useServer'
 
 export interface ServerAppProps {
   serverContext: ServerContext
-  serverDataContext: ServerDataContext
+  serverFuncContext: ServerFuncContext
 }
 
-export default (props): JSX.Element => {
-  const { serverContext, serverDataContext } = props
+export default (props: ServerAppProps): JSX.Element => {
+  const { serverContext, serverFuncContext } = props
   const { req } = serverContext
-  return <ServerDataProvider data={serverDataContext} >
-    <ServerProvider server={serverContext}>
+  return <ServerFuncProvider context={serverFuncContext} >
+    <ServerProvider context={serverContext}>
       <StaticRouter location={req.url}>
         <App />
       </StaticRouter>
     </ServerProvider>
-  </ServerDataProvider>
+  </ServerFuncProvider>
 }

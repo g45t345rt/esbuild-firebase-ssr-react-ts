@@ -3,20 +3,16 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 
 import App from './index'
-import { ServerDataProvider } from 'hooks/useServerData'
+import { getServerFuncClientContext, ServerFuncProvider } from 'hooks/useServerFunc'
 
-let data = {}
-if (window && window['initialData']) {
-  data = window['initialData']
-}
-
+const serverFuncContext = getServerFuncClientContext()
 const rootElement = document.getElementById('root')
 const client = (
-  <ServerDataProvider data={data}>
+  <ServerFuncProvider context={serverFuncContext}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </ServerDataProvider>
+  </ServerFuncProvider>
 )
 
 if (process.env.NODE_ENV === 'production') {
@@ -24,10 +20,12 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   ReactDOM.render(client, rootElement)
 
-  const evtSource = new EventSource('http://localhost:5645')
+  if (process.env.REFRESH_PORT) {
+    const evtSource = new EventSource(`http://localhost:${process.env.REFRESH_PORT}`)
 
-  evtSource.addEventListener('refresh', () => {
-    console.log('refresh')
-    window.location.reload()
-  })
+    evtSource.addEventListener('refresh', () => {
+      console.log('refresh')
+      window.location.reload()
+    })
+  } else console.log('Missing refresh port. App will not reload after edit!')
 }

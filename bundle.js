@@ -9,14 +9,17 @@ const fileLastModifiedPlugin = require('esbuild-plugin-filelastmodified').defaul
 const chokidar = require('chokidar')
 const copyfiles = require('copyfiles')
 const http = require('http')
+const postcssUrl = require('postcss-url')
+const postcssImport = require('postcss-import')
 
 const bundleEmitter = new EventEmitter()
 const argv = yargs(hideBin(process.argv)).argv
 
 const env = argv.env || 'development'
+const refreshPort = argv.refreshPort
 const isProduction = env === 'production'
 
-if (!isProduction) {
+if (!isProduction && refreshPort) {
   const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -29,26 +32,32 @@ if (!isProduction) {
     })
   })
 
-  server.listen(5645)
+  server.listen(refreshPort)
 }
 
 const baseConfig = {
   define: {
-    ['process.env.NODE_ENV']: `"${env}"`
+    ['process.env.NODE_ENV']: `"${env}"`,
+    ['process.env.REFRESH_PORT']: refreshPort
   },
-  incremental: !isProduction,
   bundle: true,
-  // not using watch onRebuild because it's actually polling every 2 seconds (I only want to website to refresh on file change)
-  sourcemap: !isProduction && 'external',
+  sourcemap: isProduction ? false : 'inline',
+  incremental: !isProduction,
+  logLevel: 'error',
   minify: isProduction,
-  metafile: true,
   plugins: [
     fileLastModifiedPlugin(),
     postCssPlugin({
-      plugins: [autoprefixer({
-        flexbox: !isProduction,
-        overrideBrowserslist: isProduction ? 'last 4 version' : 'last 1 version'
-      })]
+      plugins: [
+        postcssImport(),
+        postcssUrl([
+          { filter: '**/*.svg', url: 'inline' },
+          { filter: '**/*.ttf', url: 'inline' }
+        ]),
+        autoprefixer({
+          flexbox: !isProduction,
+          overrideBrowserslist: 'last 4 version' //isProduction ? 'last 4 version' : 'last 1 version'
+        })]
     }),
     aliasPlugin({
       'hooks': './src/app/hooks',
@@ -64,6 +73,7 @@ const buildServer = () => esbuild.build({
   platform: 'node',
   outdir: './dist/server',
   entryPoints: ['./src/server/index.ts'],
+  external: ['firebase*'] // don't bundle firebase packages (fix unexpected state) some code can't be bundle
 })
 
 // Client (browser)
@@ -74,8 +84,7 @@ const buildClient = () => esbuild.build({
   entryPoints: ['./src/app/client.tsx'],
 })
 
-
-const build = () => Promise.all([buildServer(), buildClient()])
+const build = () => Promise.all([buildClient(), buildServer()])
 copyfiles(['package.json', './dist/server'], {}, () => console.log('package.json copied to dist/server'))
 copyfiles(['./src/static/**/*', './dist/client'], { up: 1 }, () => console.log('/static copied to dist/client'))
 
@@ -89,11 +98,23 @@ if (!isProduction) {
 
     // Listening to changes
     console.log('Listening to change')
-    watcher.on('change', async () => {
-      console.log('Rebuilding...')
-      await Promise.all([esBuildClient.rebuild(), esBuildServer.rebuild()])
-      bundleEmitter.emit('rebuild')
-      console.log('Done')
+
+    let watchTimeoutId
+    watcher.on('change', () => {
+      if (watchTimeoutId) clearTimeout(watchTimeoutId)
+
+      // Make sure there is not a bunch of edit at the same time
+      watchTimeoutId = setTimeout(async () => {
+        console.log('Rebuilding...')
+        try {
+          await Promise.all([esBuildClient.rebuild(), esBuildServer.rebuild()])
+        } catch (err) {
+          console.log(err)
+        }
+
+        bundleEmitter.emit('rebuild')
+        console.log('Done')
+      }, 500)
     })
   })
 } else {

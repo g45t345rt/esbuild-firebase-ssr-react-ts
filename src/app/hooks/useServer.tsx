@@ -13,11 +13,13 @@ export default (): ServerContext => React.useContext<ServerContext>(Context)
 
 type ServerProviderProps = {
   children: ReactNode
-  server: ServerContext
+  context: ServerContext
 }
 
-export const ServerProvider = ({ children, server }: ServerProviderProps): JSX.Element => {
-  return <Context.Provider value={server}>
+export const ServerProvider = ({ children, context }: ServerProviderProps): JSX.Element => {
+  context.res.status(200) // set to 200 by default... important when we render app multiple times based on authentication
+
+  return <Context.Provider value={context}>
     {children}
   </Context.Provider>
 }

@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react'
 import resizeEvent from 'helpers/resizeEvent'
 
-//import styles from './styles.module.less'
-import styles from './styles.module.less'
+import styles from './styles.module.sass'
 
 const noTransitionClassName = styles.preventTransition
 

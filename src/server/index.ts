@@ -1,16 +1,25 @@
 import * as functions from 'firebase-functions'
-import fastify from 'fastify'
-import fastifyCookie from 'fastify-cookie'
+import fastify, { FastifyServerOptions } from 'fastify'
 import fastifyCORS from 'fastify-cors'
 import fastifyFormBody from 'fastify-formbody'
 import fastifyMultipart from 'fastify-multipart'
 import { createElement } from 'react'
-import { renderToString } from 'react-dom/server'
 import Helmet from 'react-helmet'
 import firebaseAdmin from 'firebase-admin'
 
+import { renderApp } from 'hooks/useServerFunc'
+import fastifyFirebaseCookie from './fastifyFirebaseCookie'
 import template from './template'
 import ServerApp from '../app/server'
+
+const isDev = process.env.NODE_ENV === 'development'
+
+if (isDev) {
+  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = 'localhost:9099'
+  process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080'
+  process.env['FIREBASE_DATABASE_EMULATOR_HOST'] = 'localhost:9000'
+  process.env['FIREBASE_STORAGE_EMULATOR_HOST'] = 'localhost:9199'
+}
 
 const admin = firebaseAdmin.initializeApp()
 
@@ -18,7 +27,10 @@ const auth = admin.auth()
 const firestore = admin.firestore()
 
 // Initialize fastify handler
-const app = fastify({ logger: { level: 'debug' } })
+const fastifyOptions = {} as FastifyServerOptions
+if (isDev) fastifyOptions.logger = { level: 'debug' }
+
+const app = fastify(fastifyOptions)
 
 // Declare server context
 app.decorate('auth', auth)
@@ -31,24 +43,21 @@ app.addContentTypeParser('application/json', {}, (req, res, done) => {
 
 // Register middleware
 app.register(fastifyCORS)
-app.register(fastifyCookie)
 app.register(fastifyFormBody)
 app.register(fastifyMultipart)
+app.register(fastifyFirebaseCookie)
 
+// Register master/default route
 app.get('*', async (req, res) => {
-  const serverDataContext = { promises: [] }
+  const serverFuncContext = { data: {}, funcs: {} }
   const serverContext = { req, res, app }
-  const element = createElement(ServerApp, { serverContext, serverDataContext })
-  renderToString(element)
-  await Promise.all(serverDataContext.promises)
-  Reflect.deleteProperty(serverDataContext, 'promises')
-  //delete serverDataContext.promises
+  const element = createElement(ServerApp, { serverContext, serverFuncContext })
 
+  const body = await renderApp(element, serverFuncContext)
   const helmet = Helmet.renderStatic()
-  const body = renderToString(element)
 
   res.type('text/html')
-  return template({ body, helmet, data: serverDataContext })
+  return template({ body, helmet, data: serverFuncContext.data })
 })
 
 export const request = functions.https.onRequest(async (req, res) => {

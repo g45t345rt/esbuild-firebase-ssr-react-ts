@@ -1,23 +1,30 @@
 import React from 'react'
-import { Trans, useLingui } from '@lingui/react'
 import dayjs from 'dayjs'
-import useCookie from 'hooks/useCookie'
+import { collection, getFirestore, query, getDocs } from 'firebase/firestore'
+
+import styles from './styles.module.sass'
+import useServerFunc from 'hooks/useServerFunc'
+
+const firestore = getFirestore()
 
 const lastModified = __fileLastModified__
 
 export default (): JSX.Element => {
-  const { i18n } = useLingui()
-  const [, setCookieLang] = useCookie('lang', null)
 
-  const toggleLanguage = React.useCallback(() => {
-    const newLang = i18n.locale === 'en' ? 'fr' : 'en'
-    setCookieLang(newLang)
-    i18n.activate(newLang)
-  }, [])
+  const list = useServerFunc<string[]>('list', async () => {
+    const listRef = collection(firestore, 'list')
+    try {
+      const snap = await getDocs(query(listRef))
+      return snap.docs.map((doc) => doc.data())
+    } catch (err) {
+      console.log(err)
+      return []
+    }
+  })
 
   return <div>
-    <button onClick={toggleLanguage}>Toggle language</button>
-    <h1><Trans id="This is home" /></h1>
-    <div>{dayjs(lastModified).format()}</div>
+    <h1 className={styles.title}>This is home</h1>
+    <div>{dayjs(lastModified).format('LLL')}</div>
+    {JSON.stringify(list)}
   </div>
 }
