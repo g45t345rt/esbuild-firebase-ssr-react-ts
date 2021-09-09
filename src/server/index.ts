@@ -27,10 +27,9 @@ const auth = admin.auth()
 const firestore = admin.firestore()
 
 // Initialize fastify handler
-const fastifyOptions = {} as FastifyServerOptions
-if (isDev) fastifyOptions.logger = { level: 'debug' }
-
-const app = fastify(fastifyOptions)
+const app = fastify({
+  logger: isDev
+})
 
 // Declare server context
 app.decorate('auth', auth)
@@ -55,7 +54,6 @@ app.get('*', async (req, res) => {
 
   const body = await renderApp(element, serverFuncContext)
   const helmet = Helmet.renderStatic()
-
   res.type('text/html')
   return template({ body, helmet, data: serverFuncContext.data })
 })

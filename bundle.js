@@ -89,7 +89,7 @@ const buildClient = () => esbuild.build({
 
 const build = () => Promise.all([buildClient(), buildServer()])
 copyfiles(['package.json', './dist/server'], {}, () => console.log('package.json copied to dist/server'))
-copyfiles(['./static/**/*', './dist/client'], { up: 1 }, () => console.log('/static copied to dist/client'))
+copyfiles(['./static/**/*', './dist/client/static'], { up: 1 }, () => console.log('/static copied to dist/client'))
 
 if (!isProduction) {
   const watcher = chokidar.watch('src', { ignoreInitial: true })

@@ -24,10 +24,10 @@ const fastifyFirebaseCookie: FastifyPluginCallback = (fastify, opts, done) => {
 }
 
 const parseFirebaseCookies: onRequestHookHandler = (req, res, done) => {
-  const { cookie: cookieHeader } = req.raw.headers
-  const cookies = cookie.parse(cookieHeader)
+  const cookieHeader = req.headers.cookie
+  const cookies = cookie.parse(cookieHeader || '')
   const firebaseCookie = cookies[FIREBASE_COOKIE_NAME]
-  req.firebaseCookies = parseObjString(firebaseCookie)
+  if (firebaseCookie) req.firebaseCookies = parseObjString(firebaseCookie)
   done()
 }
 
