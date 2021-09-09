@@ -1,7 +1,8 @@
 import React from 'react'
-import useServer from './useServer'
 import Cookies from 'js-cookie'
+
 import parseObjString from 'helpers/parseObjString'
+import useServer from './useServer'
 
 const FIREBASE_COOKIE_NAME = '__session'
 

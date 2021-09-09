@@ -27,7 +27,7 @@ const parseFirebaseCookies: onRequestHookHandler = (req, res, done) => {
   const cookieHeader = req.headers.cookie
   const cookies = cookie.parse(cookieHeader || '')
   const firebaseCookie = cookies[FIREBASE_COOKIE_NAME]
-  if (firebaseCookie) req.firebaseCookies = parseObjString(firebaseCookie)
+  req.firebaseCookies = parseObjString(firebaseCookie)
   done()
 }
 

@@ -26,7 +26,7 @@ export default (): JSX.Element => {
   })
 
   const toggleTheme = React.useCallback(() => {
-    theme === 'theme-light' ? setTheme('theme-dark') : setTheme('theme-light')
+    theme === 'light' ? setTheme('dark') : setTheme('light')
   }, [theme])
 
   return <div>

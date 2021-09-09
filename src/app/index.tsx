@@ -21,7 +21,7 @@ export default (): JSX.Element => {
   scrollTopOnRouteChange()
 
   return <PreventTransition>
-    <ThemeProvider name="theme-light">
+    <ThemeProvider defaultTheme="light">
       <Helmet>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
