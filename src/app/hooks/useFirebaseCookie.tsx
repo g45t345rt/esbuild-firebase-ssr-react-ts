@@ -1,7 +1,7 @@
 import React from 'react'
 import Cookies from 'js-cookie'
 
-import parseObjString from 'helpers/parseObjString'
+import tryJsonParse from 'helpers/tryJsonParse'
 import useServer from './useServer'
 
 const FIREBASE_COOKIE_NAME = '__session'
@@ -16,8 +16,8 @@ export default function useFirebaseCookie<T>(key: string, initialValue: T): [T, 
     }
 
     const cookie = Cookies.get(FIREBASE_COOKIE_NAME)
-    const data = parseObjString(cookie)
-    if (data === undefined) return initialValue
+    if (cookie === undefined) return initialValue
+    const data = tryJsonParse(cookie)
     return data[key] as T
   })
 
@@ -27,7 +27,7 @@ export default function useFirebaseCookie<T>(key: string, initialValue: T): [T, 
       setStoredValue(valueToStore)
 
       const cookie = Cookies.get(FIREBASE_COOKIE_NAME)
-      const data = parseObjString(cookie)
+      const data = tryJsonParse(cookie)
       data[key] = valueToStore
 
       Cookies.set(FIREBASE_COOKIE_NAME, JSON.stringify(data), { path: '/' })

@@ -1,7 +1,7 @@
 import { FastifyPluginCallback, FastifyReply, onRequestHookHandler } from 'fastify'
 import cookie, { CookieSerializeOptions } from 'cookie'
 import fp from 'fastify-plugin'
-import parseObjString from 'helpers/parseObjString'
+import tryJsonParse from 'helpers/tryJsonParse'
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -27,7 +27,7 @@ const parseFirebaseCookies: onRequestHookHandler = (req, res, done) => {
   const cookieHeader = req.headers.cookie
   const cookies = cookie.parse(cookieHeader || '')
   const firebaseCookie = cookies[FIREBASE_COOKIE_NAME]
-  req.firebaseCookies = parseObjString(firebaseCookie)
+  req.firebaseCookies = tryJsonParse(firebaseCookie)
   done()
 }
 
