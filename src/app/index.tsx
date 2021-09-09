@@ -15,6 +15,7 @@ import { ThemeProvider } from 'hooks/useTheme'
 
 // PAGES
 import Home from './pages/home'
+import NotFound from './pages/notfound'
 
 export default (): JSX.Element => {
   scrollTopOnRouteChange()
@@ -35,6 +36,7 @@ export default (): JSX.Element => {
       </Helmet>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route component={NotFound} />
       </Switch>
     </ThemeProvider>
   </PreventTransition>

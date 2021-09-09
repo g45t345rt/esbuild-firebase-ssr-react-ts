@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import fastify, { FastifyServerOptions } from 'fastify'
+import fastify from 'fastify'
 import fastifyCORS from 'fastify-cors'
 import fastifyFormBody from 'fastify-formbody'
 import fastifyMultipart from 'fastify-multipart'
