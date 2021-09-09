@@ -1,0 +1,30 @@
+// https://medium.com/@dmitriy.borodiy/easy-color-theming-with-scss-bc38fd5734d1
+@import 'dark'
+@import 'light'
+
+$themes: (dark: $dark, light: $light)
+
+@function themed($key)
+  @return map-get($theme-map, $key)
+
+@mixin themify-module
+  @each $theme, $map in $themes
+    :global(.theme-#{$theme}) &
+      $theme-map: () !global
+      @each $key, $submap in $map
+        $value: map-get(map-get($themes, $theme), '#{$key}')
+        $theme-map: map-merge($theme-map, ($key: $value)) !global
+
+      @content
+      $theme-map: null !global
+
+@mixin themify
+  @each $theme, $map in $themes
+    .theme-#{$theme} &
+      $theme-map: () !global
+      @each $key, $submap in $map
+        $value: map-get(map-get($themes, $theme), '#{$key}')
+        $theme-map: map-merge($theme-map, ($key: $value)) !global
+
+      @content
+      $theme-map: null !global

@@ -33,7 +33,7 @@ const parseFirebaseCookies: onRequestHookHandler = (req, res, done) => {
 
 function saveFirebaseCookies(this: FastifyReply, options?: CookieSerializeOptions) {
   const { firebaseCookies } = this.request
-  const serialized = cookie.serialize(FIREBASE_COOKIE_NAME, JSON.stringify(firebaseCookies), { path: '/' })
+  const serialized = cookie.serialize(FIREBASE_COOKIE_NAME, JSON.stringify(firebaseCookies), { path: '/', ...options })
   this.header('Set-Cookie', serialized)
 }
 

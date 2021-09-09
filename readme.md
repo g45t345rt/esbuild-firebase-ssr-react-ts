@@ -1,8 +1,9 @@
-### Website template - Firebase, react, SSR and Typescript
+# Website template - Firebase, react, SSR and Typescript
+
 Base template for deploying web application on Firebase.
 Uses React, Server side rendering for SEO and Typescript.
 
-#### For development
+## For development
 
 - Install dependencies `npm install`
 - Create firebaseConfig.json with Firebase config object for `firebase.initializeApp(firebaseConfig)`
@@ -18,7 +19,7 @@ Note: when developing you should run 2 seperate terminals
 - First terminal to watch client & server files `npm run dev`
 - Second terminal to start firebase emulator `npm run serve`
 
-#### Production
+## Production
 
 Build client & server to dist folder  
 `npm run build`  

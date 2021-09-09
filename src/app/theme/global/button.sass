@@ -1,0 +1,11 @@
+@import "../theme"
+
+button
+  user-select: none
+  cursor: pointer
+  padding: .5em 1em
+  border-radius: 5px
+  @include themify
+    color: themed('buttonTextColor')
+    background-color: themed('buttonColor')
+    border: themed('buttonBorder')

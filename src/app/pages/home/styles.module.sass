@@ -1,2 +1,5 @@
+@import 'theme'
+
 .title
-  color: blue
+  @include themify-module
+    color: themed('titleTextColor')

@@ -19,6 +19,9 @@ const env = argv.env || 'development'
 const refreshPort = argv.refreshPort
 const isProduction = env === 'production'
 
+// https://sass-lang.com/documentation/js-api#includepaths
+process.env['SASS_PATH'] = 'src/app/theme'
+
 if (!isProduction && refreshPort) {
   const server = http.createServer((req, res) => {
     res.writeHead(200, {
@@ -86,7 +89,7 @@ const buildClient = () => esbuild.build({
 
 const build = () => Promise.all([buildClient(), buildServer()])
 copyfiles(['package.json', './dist/server'], {}, () => console.log('package.json copied to dist/server'))
-copyfiles(['./src/static/**/*', './dist/client'], { up: 1 }, () => console.log('/static copied to dist/client'))
+copyfiles(['./static/**/*', './dist/client'], { up: 1 }, () => console.log('/static copied to dist/client'))
 
 if (!isProduction) {
   const watcher = chokidar.watch('src', { ignoreInitial: true })
