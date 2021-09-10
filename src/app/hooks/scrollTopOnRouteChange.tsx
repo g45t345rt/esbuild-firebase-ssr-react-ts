@@ -2,7 +2,6 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 
 export default (): void => {
-  //const history = useHistory()
   const location = useLocation()
 
   React.useEffect(() => {

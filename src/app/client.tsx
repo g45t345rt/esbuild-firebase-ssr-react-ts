@@ -27,5 +27,5 @@ if (process.env.NODE_ENV === 'production') {
       console.log('refresh')
       window.location.reload()
     })
-  } else console.log('Missing refresh port. App will not reload after edit!')
+  } else console.warn('Missing refresh port. App will not reload after edit!')
 }

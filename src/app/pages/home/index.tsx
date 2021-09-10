@@ -1,29 +1,20 @@
 import React from 'react'
 import dayjs from 'dayjs'
-import { collection, getFirestore, query, getDocs } from 'firebase/firestore'
+import { collection, getFirestore, query, getDocs, addDoc, onSnapshot, deleteDoc, doc, limit } from 'firebase/firestore'
 
 import useServerFunc from 'hooks/useServerFunc'
 import useTheme from 'hooks/useTheme'
 
 import styles from './styles.module.sass'
+import { Link } from 'react-router-dom'
 
 const firestore = getFirestore()
+const listRef = collection(firestore, 'list')
 
 const lastModified = __fileLastModified__
 
 export default (): JSX.Element => {
   const { theme, setTheme } = useTheme()
-
-  const list = useServerFunc<string[]>('list', async () => {
-    const listRef = collection(firestore, 'list')
-    try {
-      const snap = await getDocs(query(listRef))
-      return snap.docs.map((doc) => doc.data())
-    } catch (err) {
-      console.log(err)
-      return []
-    }
-  })
 
   const toggleTheme = React.useCallback(() => {
     theme === 'light' ? setTheme('dark') : setTheme('light')
@@ -46,7 +37,6 @@ export default (): JSX.Element => {
     <p>Using esbuild plugin to get the file modication date</p>
     <div className="card">{dayjs(lastModified).format('LLL')}</div>
     <h2>SSR Firestore</h2>
-    <p>Firestore request with server side rendering</p>
-    <div className="card">{JSON.stringify(list)}</div>
+    <Link to="/ssr-firestore">Go to page</Link>
   </div>
 }

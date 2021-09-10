@@ -16,6 +16,8 @@ import { ThemeProvider } from 'hooks/useTheme'
 // PAGES
 import Home from './pages/home'
 import NotFound from './pages/notfound'
+import SSRFirestore from './pages/ssrFirestore'
+import CacheControl from './pages/cachecontrol'
 
 export default (): JSX.Element => {
   scrollTopOnRouteChange()
@@ -36,6 +38,8 @@ export default (): JSX.Element => {
       </Helmet>
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/cache-control" exact component={CacheControl} />
+        <Route path="/ssr-firestore" exact component={SSRFirestore} />
         <Route component={NotFound} />
       </Switch>
     </ThemeProvider>

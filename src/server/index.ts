@@ -54,7 +54,9 @@ app.get('*', async (req, res) => {
 
   const body = await renderApp(element, serverFuncContext)
   const helmet = Helmet.renderStatic()
+
   res.type('text/html')
+
   return template({ body, helmet, data: serverFuncContext.data })
 })
 
