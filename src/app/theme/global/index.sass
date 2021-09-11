@@ -1,9 +1,12 @@
+@import "normalize.css"
+
 @import "theme"
 @import "button"
 @import "card"
 @import "grid"
 
 body
+  padding: 1em
   @include themify
     background-color: themed('backgroundColor')
     color: themed('textColor')

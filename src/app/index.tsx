@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet'
 
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
 
 import './initFirebase'
 import './theme/global/index.sass'
@@ -17,7 +19,6 @@ import { ThemeProvider } from 'hooks/useTheme'
 import Home from './pages/home'
 import NotFound from './pages/notfound'
 import SSRFirestore from './pages/ssrFirestore'
-import CacheControl from './pages/cachecontrol'
 
 export default (): JSX.Element => {
   scrollTopOnRouteChange()
@@ -38,7 +39,6 @@ export default (): JSX.Element => {
       </Helmet>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/cache-control" exact component={CacheControl} />
         <Route path="/ssr-firestore" exact component={SSRFirestore} />
         <Route component={NotFound} />
       </Switch>
